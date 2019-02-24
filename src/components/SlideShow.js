@@ -3,6 +3,12 @@ import ReactDOM from "react-dom";
 import "./gallery.css";
 
 class SlideShow extends Component {
+  constructor(props) {
+    super(props);
+    const ratioWHArray = this.props.ratio.split(":");
+    this.ratioWH = ratioWHArray[0] / ratioWHArray[1];
+    this.numberOfSlide = this.props.images.length;
+  }
   state = {
     activeIndex: 0
   };
@@ -44,9 +50,6 @@ class SlideShow extends Component {
   }
 
   componentDidMount = () => {
-    const ratioWHArray = this.props.ratio.split(":");
-    this.ratioWH = ratioWHArray[0] / ratioWHArray[1];
-    this.numberOfSlide = this.props.images.length;
     this.rootELem = ReactDOM.findDOMNode(this);
     this.container = this.rootELem.querySelector(".container");
     this.navImage = this.rootELem.querySelector(".image-nav");
