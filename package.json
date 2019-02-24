@@ -2,10 +2,10 @@
   "name": "gallery",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://viet34tqc.github.io/react-gallery",
   "dependencies": {
     "gh-pages": "^2.0.1",
     "react": "^16.8.3",
-    "homepage": "https://viet34tqc.github.io/react-gallery/",
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5"
   },
