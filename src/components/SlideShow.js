@@ -54,7 +54,6 @@ class SlideShow extends Component {
     this.container = this.rootELem.querySelector(".container");
     this.navImage = this.rootELem.querySelector(".image-nav");
     this.setImageNavWidth();
-    this.updateDimension();
     window.addEventListener("resize", this.updateDimension);
 
     this.handleRunAutomatic();
