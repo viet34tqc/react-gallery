@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import "./gallery.css";
 
 class SlideShow extends Component {
@@ -7,26 +8,53 @@ class SlideShow extends Component {
   };
 
   getActiveIndex = step => {
-    const numberOfSlide = this.props.images.length;
     const newActiveIndex = this.state.activeIndex + step;
-    if (newActiveIndex > numberOfSlide - 1) {
+    if (newActiveIndex > this.numberOfSlide - 1) {
       return 0;
     } else if (newActiveIndex < 0) {
-      return numberOfSlide - 1;
+      return this.numberOfSlide - 1;
     }
     return newActiveIndex;
   };
 
+  updateDimension = () => {
+    this.container.style.height = `${this.container.offsetWidth /
+      this.ratioWH}px`;
+    this.navImage.style.height = `${this.navImage.offsetWidth /
+      this.numberOfSlide /
+      this.ratioWH}px`;
+  };
+
   setImageNavWidth = () => {
-    const numberOfSlide = this.props.images.length;
-    const imagesNav = document.querySelectorAll(".nav__image");
+    const imagesNav = this.navImage.querySelectorAll(".nav__image");
     imagesNav.forEach(image => {
-      image.style.width = `${100 / numberOfSlide}%`;
+      image.style.width = `${100 / this.numberOfSlide}%`;
     });
   };
 
+  handleRunAutomatic = () => {
+    if (this.props.mode !== "auto") return;
+    const timeout = this.props.timeout || 1000;
+    this.automaticInterval = setInterval(this.next, Number.parseInt(timeout));
+  };
+
+  componentWillMount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    if (this.automaticInterval) clearInterval(this.automaticInterval);
+  }
+
   componentDidMount = () => {
+    const ratioWHArray = this.props.ratio.split(":");
+    this.ratioWH = ratioWHArray[0] / ratioWHArray[1];
+    this.numberOfSlide = this.props.images.length;
+    this.rootELem = ReactDOM.findDOMNode(this);
+    this.container = this.rootELem.querySelector(".container");
+    this.navImage = this.rootELem.querySelector(".image-nav");
     this.setImageNavWidth();
+    this.updateDimension();
+    window.addEventListener("resize", this.updateDimension);
+
+    this.handleRunAutomatic();
   };
 
   setActiveIndex = activeIndex => {
@@ -63,9 +91,10 @@ class SlideShow extends Component {
     return (
       <img
         key={index}
-        className="nav__image"
+        className={`nav__image ${this.getActiveClass(index)}`}
         src={image.src}
         alt={image.caption}
+        onClick={() => this.setActiveIndex(index)}
       />
     );
   };
@@ -81,9 +110,9 @@ class SlideShow extends Component {
           <span className="next" onClick={this.next}>
             ❯
           </span>
-          <div className="image-nav">
-            {this.props.images.map(this.renderImageNav)}
-          </div>
+        </div>
+        <div className="image-nav">
+          {this.props.images.map(this.renderImageNav)}
         </div>
       </div>
     );

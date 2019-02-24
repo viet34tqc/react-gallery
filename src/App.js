@@ -14,11 +14,34 @@ const images = [
 ];
 
 class App extends Component {
+  state = {
+    mode: "normal"
+  };
+
+  handleChange = () => {
+    this.setState({
+      ...this.state,
+      mode: this.state.mode === "auto" ? "normal" : "auto"
+    });
+  };
+
   render() {
     return (
       <div className="App">
         <h1>Gallery</h1>
-        <SlideShow images={images} />
+        <label htmlFor="automatic-slide">Automatic</label>
+        <input
+          type="checkbox"
+          name=""
+          id="automatic-slide"
+          onChange={this.handleChange}
+        />
+        <SlideShow
+          key={this.state.mode}
+          mode={this.state.mode}
+          images={images}
+          ratio={`3:2`}
+        />
       </div>
     );
   }
